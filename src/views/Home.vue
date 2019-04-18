@@ -5,7 +5,7 @@
         <van-search placeholder="请输入搜索关键词" v-model="value"/>
       </van-col>
       <van-col span="2">
-        <van-icon class="wd-css" name="service-o"  @click="getSongLists"/>
+        <van-icon class="wd-css" name="service-o" @click="getHotSongs"/>
       </van-col>
     </van-row>
 
@@ -31,10 +31,28 @@
         </ul>
       </van-col>
     </van-row>
+
+    <van-row>
+      <van-col span="24">
+        <h5 class="wd-songs">推荐歌单 ></h5>
+      </van-col>
+    </van-row>
+
+    <van-row>
+      <van-col span="24">
+        <ul class="wd-hotsong-wrap clearfix">
+          <li class="wd-hotsong-item" v-for="(imgs, index) in hotSongList" :key="index">
+            <img :src="imgs.coverImgUrl" alt="">
+            <p>{{ imgs.title }}</p>
+          </li>
+        </ul>
+      </van-col>
+    </van-row>
   </div>
 </template>
 
 <script>
+import { constants } from 'crypto';
 // @ is an alias to /src
 // import HelloWorld from "@/components/HelloWorld.vue";
 
@@ -56,6 +74,16 @@ export default {
         { url: require("../assets/tab2.jpg"), text: "每日" },
         { url: require("../assets/tab3.jpg"), text: "歌单" },
         { url: require("../assets/tab4.jpg"), text: "排行" }
+      ],
+      hotSongList: [
+        // { url: require("../assets/song1.jpg"), des: "City pop | 脱丧俱乐部里的复古蜜色" },
+        // { url: require("../assets/song2.jpg"), des: "民谣 |岁月缱绻时光愿你依旧从前模样"},
+        // { url: require("../assets/song3.jpg"), des: "晚安，听完这首男友音我就睡了" },
+        // { url: require("../assets/song4.jpg"), des: "当你一个人熬过了所有得苦" },
+        // { url: require("../assets/song5.jpg"), des: "经典老歌，久听不厌" },
+        // { url: require("../assets/song6.jpg"), des: "【ink扯天扯地】这就是心痛的感觉……" },
+        // { url: require("../assets/song7.jpg"), des: "空灵民谣 | 游走于冰点的旷久孤寂" },
+        // { url: require("../assets/song8.jpg"), des: "心如止水" },
       ]
     };
   },
@@ -63,8 +91,27 @@ export default {
     // HelloWorld
   },
   methods: {
+    // 获取分类歌单
     getSongLists() {
+      this.$get("/songListCategory", {
+        key: 579621905
+      }).then(res => {});
+    },
+    // 获取热门歌单
+    getHotSongs() {
+      this.$get("/hotSongList", {
+        key: 579621905,
+        limit: 100,
+      }).then(res => {
+        console.log(res)
+        let {code, data, result} = res;
+        if(code === 200 && result === "SUCCESS") {
+          this.hotSongList = data;
+        } else {
 
+        }
+        
+      })
     },
     getHome() {},
     onChange(index) {
@@ -117,6 +164,29 @@ export default {
       padding: 5px 0;
       margin: 0;
       font-size: 12px;
+    }
+  }
+}
+
+.wd-songs {
+  margin: 10px;
+}
+
+.wd-hotsong-wrap {
+  margin-bottom: 50px;
+  .wd-hotsong-item {
+    float: left;
+    width: 33%;
+    text-align: center;
+    padding: 2px 5px;
+    box-sizing: border-box;
+    img {
+      width: 95%;
+    }
+    p {
+      margin: 0px;
+      font-size: 12px;
+      text-align: left
     }
   }
 }

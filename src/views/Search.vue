@@ -21,7 +21,7 @@ export default {
     return {};
   },
   created() {
-    this.getSongs();
+    // this.getSongs();
   },
   methods: {
     getSongs() {

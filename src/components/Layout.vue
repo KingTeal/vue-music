@@ -10,7 +10,7 @@
 
     <van-row>
       <van-col span="24">
-        <van-tabbar v-model="active" active-color="#1989fa">
+        <van-tabbar class="wd-foot" v-model="active" active-color="#1989fa">
           <van-tabbar-item icon="home-o" @click="getHome">首页</van-tabbar-item>
           <van-tabbar-item icon="search" @click="getSearch">搜索</van-tabbar-item>
           <van-tabbar-item icon="friends-o" @click="getMyself">我</van-tabbar-item>
@@ -28,7 +28,6 @@ export default {
       active: 0,
     };
   },
-  name: "home",
   components: {
     // HelloWorld
   },
