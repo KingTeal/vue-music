@@ -1,5 +1,18 @@
 <template>
-  <div>这是search页</div>
+  <div>
+    <van-row>
+      <van-col span="24">
+        <van-nav-bar
+          title="歌单列表"
+          left-text="返回"
+          right-text="按钮"
+          left-arrow
+          @click-left="onClickLeft"
+          @click-right="onClickRight"
+        />
+      </van-col>
+    </van-row>
+  </div>
 </template>
 
 <script>
@@ -8,15 +21,16 @@ export default {
     return {};
   },
   created() {
-    this.getSongs()
+    this.getSongs();
   },
   methods: {
     getSongs() {
       this.$get("/songList", {
         key: 579621905,
-        id: 3778678
+        id: 3778678,
+        limit: 100
       }).then(res => {
-        console.log(res)
+        console.log(res);
         // this.logining = false;
         // let { msg, code, user } = data;
         // let msg = res.returnMessage;
