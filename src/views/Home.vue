@@ -2,7 +2,7 @@
   <div class="home">
     <van-row class="wd-top">
       <van-col span="22">
-        <van-search placeholder="请输入搜索关键词" v-model="value"/>
+        <van-search placeholder="请输入搜索关键词" v-model="value" @click="getQualitySongList"/>
       </van-col>
       <van-col span="2">
         <van-icon class="wd-css" name="service-o" @click="getHotSongs"/>
@@ -34,15 +34,43 @@
 
     <van-row>
       <van-col span="24">
-        <h5 class="wd-songs">推荐歌单 ></h5>
+        <div class="clearfix">
+          <h5 class="wd-songs fl">热门歌单 ></h5>
+          <h5 class="wd-songs fr">更多>></h5>
+        </div>
       </van-col>
     </van-row>
 
     <van-row>
       <van-col span="24">
         <ul class="wd-hotsong-wrap clearfix">
-          <li class="wd-hotsong-item" v-for="(imgs, index) in hotSongList" :key="index">
-            <img :src="imgs.coverImgUrl" alt="">
+          <li
+            class="wd-hotsong-item"
+            v-for="(imgs, index) in hotSongList"
+            :key="index"
+            @click="toSongDetail(imgs)"
+          >
+            <img :src="imgs.coverImgUrl" alt>
+            <p>{{ imgs.title }}</p>
+          </li>
+        </ul>
+      </van-col>
+    </van-row>
+
+    <van-row>
+      <van-col span="24">
+        <div class="clearfix">
+          <h5 class="wd-songs fl">精品歌单 ></h5>
+          <h5 class="wd-songs fr">更多>></h5>
+        </div>
+      </van-col>
+    </van-row>
+
+    <van-row>
+      <van-col span="24">
+        <ul class="wd-hotsong-wrap clearfix" style="margin-bottom: 50px">
+          <li class="wd-hotsong-item" v-for="(imgs, index) in qualitySongList" :key="index">
+            <img :src="imgs.coverImgUrl" alt>
             <p>{{ imgs.title }}</p>
           </li>
         </ul>
@@ -52,7 +80,7 @@
 </template>
 
 <script>
-import { constants } from 'crypto';
+import { constants } from "crypto";
 // @ is an alias to /src
 // import HelloWorld from "@/components/HelloWorld.vue";
 
@@ -75,6 +103,7 @@ export default {
         { url: require("../assets/tab3.jpg"), text: "歌单" },
         { url: require("../assets/tab4.jpg"), text: "排行" }
       ],
+      // 热门歌单
       hotSongList: [
         // { url: require("../assets/song1.jpg"), des: "City pop | 脱丧俱乐部里的复古蜜色" },
         // { url: require("../assets/song2.jpg"), des: "民谣 |岁月缱绻时光愿你依旧从前模样"},
@@ -84,11 +113,17 @@ export default {
         // { url: require("../assets/song6.jpg"), des: "【ink扯天扯地】这就是心痛的感觉……" },
         // { url: require("../assets/song7.jpg"), des: "空灵民谣 | 游走于冰点的旷久孤寂" },
         // { url: require("../assets/song8.jpg"), des: "心如止水" },
-      ]
+      ],
+      // 精品歌单
+      qualitySongList: []
     };
   },
   components: {
     // HelloWorld
+  },
+  created() {
+    this.getHotSongs();
+    // this.getQualitySongList();
   },
   methods: {
     // 获取分类歌单
@@ -97,22 +132,42 @@ export default {
         key: 579621905
       }).then(res => {});
     },
-    // 获取热门歌单
-    getHotSongs() {
-      this.$get("/hotSongList", {
-        key: 579621905,
-        limit: 100,
-      }).then(res => {
-        console.log(res)
-        let {code, data, result} = res;
-        if(code === 200 && result === "SUCCESS") {
-          this.hotSongList = data;
-        } else {
 
-        }
-        
-      })
+    // 初始化获取热门歌单默认9个
+    getHotSongs() {
+      this.$api
+        .gethotsong({
+          key: 579621905,
+          limit: 9
+        })
+        .then(res => {
+          let { code, data, result } = res;
+          if (code === 200 && result === "SUCCESS") {
+            this.hotSongList = data;
+          } else {
+          }
+        });
     },
+    // 获取精品歌单默认9个
+    getQualitySongList() {
+      this.$api
+        .getgoodsonglist({
+          key: 579621905,
+          limit: 9
+        })
+        .then(res => {
+          let { code, data, result } = res;
+          if (code === 200 && result === "SUCCESS") {
+            this.qualitySongList = data.playlists;
+          } else {
+          }
+        });
+    },
+
+    toSongDetail(id) {
+      this.$router.push({ path: "/detail", query: { id: id.id } });
+    },
+
     getHome() {},
     onChange(index) {
       this.current = index;
@@ -173,10 +228,12 @@ export default {
 }
 
 .wd-hotsong-wrap {
-  margin-bottom: 50px;
+  // margin-bottom: 50px;
+  border-bottom: 1px solid #f2f2f2;
   .wd-hotsong-item {
     float: left;
     width: 33%;
+    height: 165px;
     text-align: center;
     padding: 2px 5px;
     box-sizing: border-box;
@@ -186,7 +243,7 @@ export default {
     p {
       margin: 0px;
       font-size: 12px;
-      text-align: left
+      text-align: left;
     }
   }
 }

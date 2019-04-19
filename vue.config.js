@@ -7,9 +7,9 @@ module.exports = {
     proxy: {
       '/api': {
         // 网易云：
-        target: 'https://api.itooi.cn/music/netease/',
+        // target: 'https://api.itooi.cn/music/netease/',
         // QQ：
-        // target: 'https://api.itooi.cn/music/tencent/',
+        target: 'https://api.itooi.cn/music/tencent/',
         ws: true,
         changeOrigin: true,
         pathRewrite: {

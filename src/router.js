@@ -6,6 +6,7 @@ import Home from './views/Home.vue'
 import Myself from './views/About'
 import Search from './views/Search'
 import SetInfo from './views/Setting'
+import Detail from './views/SongsListDetail'
 
 
 Vue.use(Router)
@@ -44,6 +45,14 @@ export default new Router({
       component: Layout,
       children: [
         { path: '/setinfo', component: SetInfo, name: 'set' }
+      ]
+    },
+    {
+      path: '/',
+      name: '',
+      component: Layout,
+      children: [
+        { path: '/detail', component: Detail, name: 'detail' }
       ]
     }
     // {

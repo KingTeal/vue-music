@@ -1,8 +1,32 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view v-if="isRouterAlive" />
   </div>
 </template>
+
+<script>
+export default {
+  provide() {
+    return {
+      reload: this.reload
+    };
+  },
+  data() {
+    return {
+      isRouterAlive: true
+    };
+  },
+  methods: {
+    reload() {
+      this.isRouterAlive = false;
+      this.$nextTick(function() {
+        this.isRouterAlive = true;
+      });
+    }
+  }
+};
+</script>
+
 
 <style lang="less">
 #app {
@@ -27,5 +51,12 @@
   content: "";
   display: block;
   clear: both;
+}
+
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
 }
 </style>
